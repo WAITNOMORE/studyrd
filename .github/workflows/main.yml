@@ -1,0 +1,33 @@
+#include <freerdp/freerdp.h>
+#include <freerdp/client.h>
+
+int main(int argc, char* argv[])
+{
+    freerdp* instance = freerdp_new();
+    if (!instance)
+    {
+        fprintf(stderr, "Failed to create FreeRDP instance\n");
+        return -1;
+    }
+
+    instance->settings->ServerHostname = strdup("your_rdp_server");
+    instance->settings->Username = strdup("your_username");
+    instance->settings->Password = strdup("your_password");
+
+    if (!freerdp_connect(instance))
+    {
+        fprintf(stderr, "Failed to connect to RDP server\n");
+        freerdp_free(instance);
+        return -1;
+    }
+
+    while (freerdp_check_fds(instance))
+    {
+        // Main loop to process RDP events
+    }
+
+    freerdp_disconnect(instance);
+    freerdp_free(instance);
+
+    return 0;
+}
